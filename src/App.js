@@ -5,57 +5,42 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: 'React',
-      count: 0
+      isLoading: true,
+      posts: [],
+      comments: [],
     };
-    // чтобы не потерять контекст this я использую bind
-    this.exponentiation = this.exponentiation.bind(this);  
   }
-  // в некоторых записях в сети работают без конструктора а сразу с state
-  // this.state = {} - это обьект состояния в классовом компоненте
 
-  increment = () => {
-    this.setState((prevState) => ({count: prevState.count + 1}), () => console.log('setState complite'))
+  componentDidMount() {
+    fetch('https://jsonplaceholder.typicode.com/posts')
+      .then(response => response.json())
+      .then(data => this.setState({ posts: data, isLoading: false }))
 
-    console.log('complite') // это сообщение будет первым потому что setState асинхронный метод 
-  };
-  // this.setState - это метод для изменения состояния компонента
-
-  decrement = () => this.setState({ count: this.state.count - 1 });
-  // этот сценарий чаще используется и делает тоже самое
-
-  // если мну нужно будет обычная ф-я
-  exponentiation() {
-    this.setState({count: this.state.count ** 2})
+     this. timerId = setInterval(() => {
+      fetch('https://jsonplaceholder.typicode.com/comments')
+        .then(response => response.json())
+        .then(data => this.setState({ comments: data }))
+    }, 4000)
+    // делаем get запросы на БЕК
   }
-  // если мну нужно будет обычная ф-я
-componentDidMount() {
- console.log("componentDidMount");
-//  fetch ('/post')
-}
 
-componentDidUpdate() {
-  console.log("componentDidUpdate");
-//  fetch ('/post/${id}')
-// определенного юзера коментарии лайки
+  componentDidUpdate() {
+    console.log('update', this.timerId)
+    // следим за апдейтами
+  }
 
-}
-
-componentWillUnmount() {
-  console.log("componentWillUnmount");
-}
+  componentWillUnmount() {
+    clearInterval(this.timerId)
+    // очистка памяти
+  }
   render() {
     return (
-      <div className='container'>
-        <button className='btn' onClick={this.increment}>+</button>
-        <button className='btn' onClick={this.decrement}>-</button>
-        <button className='btn' onClick={this.exponentiation}>**</button>
-
-        {/* onClick() - обработчик клика, в Реакте это норм когда вешаю так на btn*/}
-        <span>{this.state.count}</span>
+      <div>
+        {this.state.isLoading ? <h3>loading...</h3> : <h3>
+          {this.state.posts.length} was loaded
+        </h3>}
       </div>
     )
-
   }
 }
 
