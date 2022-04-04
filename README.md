@@ -1,5 +1,7 @@
 # Getting Started with Create React App
 
+React timer with life cycle methods
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
